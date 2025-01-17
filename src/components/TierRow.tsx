@@ -1,16 +1,10 @@
 import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
-import { ImageType, Tier } from "./App";
 import { ImageCard } from "./ImageCard";
 import { useMemo } from "react";
 import { useDroppable } from "@dnd-kit/core";
+import { Tier } from "../types";
 
-export const TierRow = ({
-  tier,
-  images,
-}: {
-  tier: Tier;
-  images: ImageType[];
-}) => {
+export function TierRow({ tier }: { tier: Tier }) {
   const { setNodeRef } = useDroppable({
     id: tier.id,
     data: {
@@ -19,15 +13,9 @@ export const TierRow = ({
     },
   });
 
-  const imagesByTier = useMemo(
-    () => images.filter((image) => image.tier === tier.id),
-    [images, tier.id],
-  );
+  const images = useMemo(() => tier.images, [tier.images]);
 
-  const imagesId = useMemo(
-    () => imagesByTier.map((image) => image.id),
-    [imagesByTier],
-  );
+  const imagesId = useMemo(() => images.map((image) => image.id), [images]);
 
   return (
     <SortableContext
@@ -35,19 +23,21 @@ export const TierRow = ({
       items={imagesId}
       strategy={rectSortingStrategy}
     >
-      <div className="flex" ref={setNodeRef}>
+      <div ref={setNodeRef} className="m-1 flex min-h-24 gap-0.5 bg-[#404040]">
         <div
-          className="flex h-24 w-24 items-center justify-center font-bold text-black"
+          className="flex h-auto w-24 items-center justify-center border-r p-0.5 text-center font-bold text-gray-900"
           style={{ backgroundColor: tier.color }}
+          title={tier.id.slice(0, 10)}
+          contentEditable
         >
           {tier.name}
         </div>
-        <div className="grid flex-1 grid-cols-12 gap-0.5 bg-[#404040]">
-          {imagesByTier.map((image) => (
+        <div className="flex flex-1 flex-wrap">
+          {images.map((image) => (
             <ImageCard key={image.id} image={image} />
           ))}
         </div>
       </div>
     </SortableContext>
   );
-};
+}

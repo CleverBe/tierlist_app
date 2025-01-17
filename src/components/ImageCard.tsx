@@ -1,20 +1,14 @@
 import { useSortable } from "@dnd-kit/sortable";
-import { ImageType } from "./App";
-import { cn } from "./lib/utils";
 import { CSS } from "@dnd-kit/utilities";
+import { ImageType } from "../types";
 
-export const ImageItem = ({ image }: { image: ImageType }) => {
+export function ImageItem({ image }: { image: ImageType }) {
   return (
-    <img
-      src={image.src}
-      alt={image.id}
-      className={cn("h-24 w-24 object-cover")}
-      title={image.id.slice(0, 10)}
-    />
+    <img src={image.src} alt={image.id} className={"h-24 w-24 object-cover"} />
   );
-};
+}
 
-export const ImageCard = ({ image }: { image: ImageType }) => {
+export function ImageCard({ image }: { image: ImageType }) {
   const {
     attributes,
     listeners,
@@ -31,8 +25,9 @@ export const ImageCard = ({ image }: { image: ImageType }) => {
   });
 
   const style = {
-    transition,
     transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
   };
 
   return (
@@ -41,9 +36,9 @@ export const ImageCard = ({ image }: { image: ImageType }) => {
       style={style}
       {...attributes}
       {...listeners}
-      className={cn("h-fit w-fit", isDragging && "opacity-50")}
+      className="h-24 w-24"
     >
       <ImageItem image={image} />
     </div>
   );
-};
+}
