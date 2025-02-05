@@ -10,6 +10,7 @@ import {
   KeyboardSensor,
   PointerSensor,
   pointerWithin,
+  TouchSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -71,6 +72,17 @@ function App() {
 
   const boxTier = tiers.find((tier) => tier.id === boxId);
 
+  const changeTierName = (tierId: string, name: string) => {
+    setTiers(
+      tiers.map((tier) => {
+        if (tier.id === tierId) {
+          return { ...tier, name };
+        }
+        return tier;
+      }),
+    );
+  };
+
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -110,6 +122,7 @@ function App() {
 
   const sensors = useSensors(
     useSensor(PointerSensor),
+    useSensor(TouchSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
@@ -236,7 +249,7 @@ function App() {
           onDragEnd={handleDragEnd}
         >
           <div className="my-4 select-none">
-            <TiersContent tiers={validTiers} />
+            <TiersContent tiers={validTiers} changeTierName={changeTierName} />
           </div>
           <div className="my-4 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <input
